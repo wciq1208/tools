@@ -9,6 +9,7 @@
 #include "meta.h"
 
 namespace type {
+namespace list {
 
 template<class V, class N = Empty>
 struct List {
@@ -17,20 +18,22 @@ struct List {
 };
 
 template<class... Args>
-struct Create;
+struct Creator;
 
 template<class V, class... Args>
-struct Create<V, Args...> {
-    typedef List<V, typename Create<Args...>::type> type;
+struct Creator<V, Args...> {
+    typedef List<V, typename Creator<Args...>::type> type;
 };
 
 template<class V>
-struct Create<V> {
+struct Creator<V> {
     typedef List<V, Empty> type;
 };
 
 template<>
-struct Create<>;
+struct Creator<> {
+    typedef List<Empty, Empty> type;
+};
 
 template<class T, size_t i>
 struct IndexOf;
@@ -214,6 +217,7 @@ template <class V, class N, size_t idx, class T>
 struct Insert <List<V, N>, idx, T> {
     typedef List<V, typename Insert<N, idx - 1, T>::type> type;
 };
+}
 }
 
 #endif //TOOLS_TYPE_LIST_H_
