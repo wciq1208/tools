@@ -102,6 +102,29 @@ void map_set() {
     std::cout << std::is_same<map::Get<map::Set<map1, int, char>::type, int >::type, char>::value << std::endl;
 }
 
+void map_remove() {
+    struct Test1;
+    struct Test2;
+    using map1 = map::Creator<
+        Pair<int, float>,
+        Pair<float, char>,
+        Pair<Test1, Test2>,
+        Pair<long, short>>::type;
+    std::cout << std::is_same<map::Get<map::Remove<map1, float>::type, float >::type , Empty>::value << std::endl;
+    std::cout << std::is_same<map::Get<map::Remove<map1, char>::type, char >::type , Empty>::value << std::endl;
+}
+
+void map_no_duplicate() {
+    struct Test1;
+    struct Test2;
+    using map1 = map::Creator<
+        Pair<int, float>,
+        Pair<int, char>,
+        Pair<int, Test2>,
+        Pair<int, short>>::type;
+    std::cout << std::is_same<map::Get<map1, int >::type , float>::value << std::endl;
+}
+
 int main() {
     std::cout << "list test" << std::endl;
     list_replace_by_type();
@@ -116,4 +139,5 @@ int main() {
     std::cout << "map test" << std::endl;
     map_get();
     map_set();
+    map_remove();
 }

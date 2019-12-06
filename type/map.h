@@ -50,6 +50,36 @@ struct Set <list::List<Pair<Key, Value>, N>, K, V> {
     typedef typename list::List<Pair<Key, Value>, typename Set<N, K, V>::type> type;
 };
 
+template <class TMap, class K>
+struct Remove;
+
+template <class K>
+struct Remove <Empty, K> {
+    typedef Empty type;
+};
+
+template <class Key, class Value, class N>
+struct Remove <list::List<Pair<Key, Value>, N>, Key> {
+    typedef typename Remove <N, Key>::type type;
+};
+
+template <class Key, class Value, class N, class K>
+struct Remove <list::List<Pair<Key, Value>, N>, K> {
+    typedef list::List<Pair<Key, Value>, typename Remove<N, K>::type> type;
+};
+
+template <class TMap>
+struct NoDuplicate;
+
+template <>
+struct NoDuplicate <Empty> {
+    typedef Empty type;
+};
+
+template <class Key, class Value, class N>
+struct NoDuplicate <list::List<Pair<Key, Value>, N>> {
+    typedef list::List<Pair<Key, Value>, typename NoDuplicate<typename Remove<N, Key>::type>::type> type;
+};
 
 
 template <class ...Items>
@@ -62,7 +92,7 @@ struct Creator<Pair<K, V>> {
 
 template <class K, class V, class ...Items>
 struct Creator<Pair<K, V>, Items...> {
-    typedef Map<K, V, typename Creator<Items...>::type> type;
+    typedef typename NoDuplicate<Map<K, V, typename Creator<Items...>::type>>::type type;
 };
 }
 }
