@@ -139,4 +139,5 @@ int main() {
     map_get();
     map_set();
     map_remove();
+    map_no_duplicate();
 }
